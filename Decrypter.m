@@ -1,4 +1,4 @@
-inputFile = fopen('ciphertexts/cipher2.txt');
+inputFile = fopen('ciphertexts/cipher1.txt');
 encryptedString = fread(inputFile, '*char');
 fclose(inputFile);
 
@@ -14,6 +14,7 @@ while correct ~= 'Y' && i < 26
     i = i+1;
     decryptedString = shiftdecrypt(encryptedString, possiblekeys(i));
     decryptedString = decryptedString + '@';
+    fprintf("\nPossible key: %d\n", possiblekeys(i));
     fprintf('%s\n', decryptedString(1:100));
     prompt = 'Does this look correct?(Y/N): ';
     correct = input(prompt, 's');
