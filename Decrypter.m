@@ -1,4 +1,4 @@
-inputFile = fopen('ciphertexts/cipher1.txt');
+inputFile = fopen('ciphertexts/cipher2.txt');
 encryptedString = fread(inputFile, '*char');
 fclose(inputFile);
 
@@ -6,7 +6,8 @@ encryptedString = upper(encryptedString);
 encryptedString = encryptedString - '@';
 [monofreq, difreq] = freqAnalysis(encryptedString);
 
-possiblekeys = shiftkey(monofreq);
+possiblekeys = substitutionKey(monofreq);
+decryptedString = substitutionDecrypt(encryptedString, possiblekeys);
 
 i=0;
 correct = 'N';  
