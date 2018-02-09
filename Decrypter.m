@@ -1,4 +1,4 @@
-inputFile = fopen('ciphertexts/cipher2.txt');
+inputFile = fopen('ciphertexts/cipher4.txt');
 encryptedString = fread(inputFile, '*char');
 fclose(inputFile);
 
