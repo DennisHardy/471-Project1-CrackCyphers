@@ -7,7 +7,7 @@ function likelyKeys = substitutionKey(freq)
     englishSorted = 'ETAOINSRHD________________';
     [~, subKey] = sort(freq, 'desc');
     char likelyKeys(26);
-    for i = 1:10
+    for i = 1:26
         likelyKeys(subKey(i)) = englishSorted(i);
     end
     

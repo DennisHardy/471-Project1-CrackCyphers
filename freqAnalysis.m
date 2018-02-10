@@ -1,4 +1,4 @@
-function [monofreq, difreq] = freqAnalysis(inString)
+function [monofreq, difreq] = freqAnalysis(inString, print)
 %UNTITLED2 returns the number of time each character appears in instring
 %   freq(1)= A, freq(26)=Z
 inString = inString + '@';
@@ -15,7 +15,6 @@ for a='A':'Z'
     end
 end
 difreq = 100*difreq./sum(sum(difreq));
-ans = sum(sum(difreq));
 [freqM, monogram]=sort(monofreq, 'descend');
 shiftkey = monogram-englishSorted+'@';
 shiftkey = mod(shiftkey, 26);
@@ -24,18 +23,19 @@ shiftkey = mod(shiftkey, 26);
 [diChar1, diChar2] = ind2sub(size(difreq), diIndex);
 diFreqChar = horzcat(difreqs, diChar1,diChar2);
 
-%print frequency of monograms:
-fprintf("Character Frequency of Ciphertext:\n");
-for i=1:26
-    fprintf("%s:\t%d\t%.2f%%\t| %s\t%.2f%%\tshiftkey: %d\n", monogram(i)+'@', freqM(i), 100*freqM(i)/sum(freqM), englishSorted(i), englishFreqs(i), shiftkey(i));
-end
+if print
+    %print frequency of monograms:
+    fprintf("Character Frequency of Ciphertext:\n");
+    for i=1:26
+        fprintf("%s:\t%d\t%.2f%%\t| %s\t%.2f%%\tshiftkey: %d\n", monogram(i)+'@', freqM(i), 100*freqM(i)/sum(freqM), englishSorted(i), englishFreqs(i), shiftkey(i));
+    end
 
-%print frequency of (10 most common) digrams:
-fprintf("\nMost Frequent Digrams of Ciphertext:\n");
-for i=1:10
-   fprintf("%s%s:\t%.2f\t| %s:\t%.2f%%\n", diFreqChar(i,2)+'@',diFreqChar(i,3)+'@', diFreqChar(i,1), englishDi(i), englishDiFreqs(i)); 
+    %print frequency of (10 most common) digrams:
+    fprintf("\nMost Frequent Digrams of Ciphertext:\n");
+    for i=1:10
+       fprintf("%s%s:\t%.2f\t| %s:\t%.2f%%\n", diFreqChar(i,2)+'@',diFreqChar(i,3)+'@', diFreqChar(i,1), englishDi(i), englishDiFreqs(i)); 
+    end
 end
-
-fprintf("%d\n", mode(shiftkey));
+%fprintf("%d\n", mode(shiftkey));
 end
 
