@@ -1,13 +1,10 @@
-function decrypted = permDecrypt(encrypted,key)
+function [decrypted, key] = permDecrypt(encrypted)
 %permDecrypt decrypts a message encrypted using #key columns 
 %   of a columnar transpostion
-l=1;
-encrypted = char(encrypted);
+key=10;
+encrypted = char(encrypted+'@');
 for i = 1:key
-    for j = i:key:length(encrypted)
-        decrypted(l) = char(encrypted(j)+'@');
-        l=l+1;
-    end
+    decrypted(i,:) = encrypted(i:key:length(encrypted));
 end
 end
 

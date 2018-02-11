@@ -1,10 +1,11 @@
-inputFile = fopen('ciphertexts/cipher3.txt');
+inputFile = fopen('ciphertexts/KnownShift17 copy.txt');
 %cipher1= shift
 %cipher2= substitution
 %cipher3= vignere
 %cipher4= otp??
+%cipher5= transposition 82637451
 
-%read input from file
+%read input from fil
 encryptedString = fread(inputFile, '*char');
 fclose(inputFile);
 
@@ -32,8 +33,22 @@ elseif IC <= 0.065
     decryptedInfo = strcat("Cipher type: Vigenere Cipher. Key = '", key,"'.");
 else 
     fprintf("Ciphertext is likely shift, substitution, or permutation cipher.\n");
-    [decrypted, key] = shiftdecrypt(encryptedString, true);
-    decryptedInfo = strcat("Cipher type: Shift Cipher. Key = ", string(key(:)), " ('",char(key(:)+'@'),"').");
+    %if calculate shift key for each letter most frequent letter -> e 2nd
+    %most freq -> t ...
+    englishSorted = 'ETAOINSRHDLUCMFYWGPBVKXQJZ';
+    [~, monogram]=sort(monofreq, 'descend');
+    shiftkey = monogram-englishSorted+'@';
+    shiftkey = mod(shiftkey, 26);
+    [m, f] = mode(shiftkey);
+    if f>=5 %if ther is a shift key shared by 5+ elements try 
+        if m == 0 %if most common shift key is 0 permutation cipher
+            [decrypted, key] = permDecrypt(encryptedString);
+        end
+        [decrypted, key] = shiftdecrypt(encryptedString, true);
+        decryptedInfo = strcat("Cipher type: Shift Cipher. Key = ", string(key(:)), " ('",char(key(:)+'@'),"').");
+    else %substitution cipher
+        
+    end
 end
 
 outputFile = fopen('output.txt', 'w');
