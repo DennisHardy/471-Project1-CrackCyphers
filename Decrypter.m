@@ -1,9 +1,10 @@
-inputFile = fopen('ciphertexts/KnownShift17 copy.txt');
+inputFile = fopen('ciphertexts/cipher5.txt');
+outfile ='outputs/output5.txt';
 %cipher1= shift
 %cipher2= substitution
 %cipher3= vignere
 %cipher4= otp??
-%cipher5= transposition 82637451
+%cipher5= transposition
 
 %read input from fil
 encryptedString = fread(inputFile, '*char');
@@ -26,6 +27,7 @@ fprintf("Random text index of coincidence:\t0.0385 \n");
 if IC <=0.039 %very low IC = One time pad (equivalent to random text)
     fprintf("Ciphertext is likely one-time pad. Cannot decrypt.\n");
     decryptedInfo = "Cipher type: One time pad. Decryption not possible.";
+    decrypted = [];
 elseif IC <= 0.065
     fprintf("Ciphertext is likely Vigenere Cipher.\n");
     [decrypted, key] = Vdecrypt(encryptedString);
@@ -42,19 +44,25 @@ else
     [m, f] = mode(shiftkey);
     if f>=5 %if ther is a shift key shared by 5+ elements try 
         if m == 0 %if most common shift key is 0 permutation cipher
+            fprintf("Ciphertext is likely Permutatuion (Columnar Transposition) Cipher.\n");
             [decrypted, key] = permDecrypt(encryptedString);
+            decryptedInfo = strcat("Cipher type: Permutation Cipher(Columnar Transposition). Key = ", string(key(:)),".");
+        else
+            fprintf("Ciphertext is likely Shift Cipher.\n");
+            [decrypted, key] = shiftdecrypt(encryptedString, true);
+            decryptedInfo = strcat("Cipher type: Shift Cipher. Key = ", string(key(:)), " ('",char(key(:)+'@'),"').");
         end
-        [decrypted, key] = shiftdecrypt(encryptedString, true);
-        decryptedInfo = strcat("Cipher type: Shift Cipher. Key = ", string(key(:)), " ('",char(key(:)+'@'),"').");
     else %substitution cipher
-        
+        fprintf("Ciphertext is likely Substitution Cipher.\n");
+        [decrypted, key] = substitutionDecrypt(encryptedString, monofreq);
+        decryptedInfo = strcat("Cipher type: Substituion Cipher. Key = ", key,".");
     end
 end
 
-outputFile = fopen('output.txt', 'w');
+outputFile = fopen(outfile, 'w');
 fwrite(outputFile, decryptedInfo , '*char');
 fclose(outputFile);
-outputFile = fopen('output.txt', 'a');
+outputFile = fopen(outfile, 'a');
 fwrite(outputFile, newline , '*char');
 fwrite(outputFile, decrypted , '*char');
 fclose(outputFile);
